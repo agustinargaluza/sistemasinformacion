@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ruta del Almuerzo</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --green:       #22C55E;
+    --green-dark:  #16A34A;
+    --green-light: #DCFCE7;
+    --bg:          #0F172A;
+    --surface:     #1E293B;
+    --surface2:    #334155;
+    --text:        #F8FAFC;
+    --text-muted:  #94A3B8;
+    --border:      #334155;
+    --radius:      12px;
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 24px 16px 40px;
+  }
+
+  .card {
+    background: #fff;
+    color: #0F172A;
+    border-radius: 20px;
+    width: 100%;
+    max-width: 420px;
+    overflow: hidden;
+  }
+
+  .card-header {
+    background: var(--bg);
+    padding: 20px 20px 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--text);
+  }
+
+  .logo-icon {
+    width: 28px; height: 28px;
+    background: var(--green);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+  }
+
+  .avatar {
+    width: 32px; height: 32px;
+    background: var(--surface2);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text-muted);
+    font-size: 16px;
+  }
+
+  .hero {
+    padding: 24px 20px 8px;
+    background: #fff;
+  }
+
+  .hero h1 {
+    font-size: 26px;
+    font-weight: 700;
+    color: #0F172A;
+    line-height: 1.2;
+    margin-bottom: 6px;
+  }
+
+  .hero p {
+    font-size: 13px;
+    color: #64748B;
+    line-height: 1.5;
+  }
+
+  .form-body {
+    padding: 16px 20px 24px;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .field label {
+    display: block;
+    font-size: 12px;
+    font-weight: 500;
+    color: #64748B;
+    margin-bottom: 6px;
+  }
+
+  .input-wrap {
+    position: relative;
+  }
+
+  .input-wrap .icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #94A3B8;
+    font-size: 15px;
+  }
+
+  .input-wrap input,
+  .input-wrap textarea {
+    width: 100%;
+    border: 1.5px solid #E2E8F0;
+    border-radius: 10px;
+    padding: 11px 12px 11px 36px;
+    font-size: 14px;
+    font-family: 'Inter', sans-serif;
+    color: #0F172A;
+    background: #F8FAFC;
+    transition: border-color 0.15s;
+    outline: none;
+  }
+
+  .input-wrap textarea {
+    padding-left: 12px;
+    resize: none;
+    height: 72px;
+  }
+
+  .input-wrap input:focus,
+  .input-wrap textarea:focus {
+    border-color: var(--green);
+    background: #fff;
+  }
+
+  .input-wrap input::placeholder,
+  .input-wrap textarea::placeholder {
+    color: #CBD5E1;
+  }
+
+  .menu-label {
+    font-size: 12px;
+    font-weight: 500;
+    color: #64748B;
+    margin-bottom: 8px;
+  }
+
+  .menu-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .menu-item {
+    border: 1.5px solid #E2E8F0;
+    border-radius: 12px;
+    padding: 12px 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    transition: all 0.15s;
+    background: #F8FAFC;
+  }
+
+  .menu-item:hover { border-color: #86EFAC; background: #F0FDF4; }
+
+  .menu-item.selected {
+    border-color: var(--green);
+    background: #F0FDF4;
+  }
+
+  .menu-icon {
+    width: 36px; height: 36px;
+    background: #E2E8F0;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+    transition: background 0.15s;
+  }
+
+  .menu-item.selected .menu-icon { background: var(--green-light); }
+
+  .menu-info { flex: 1; }
+
+  .menu-info p {
+    font-size: 14px;
+    font-weight: 500;
+    color: #0F172A;
+  }
+
+  .menu-info span {
+    font-size: 12px;
+    color: #64748B;
+  }
+
+  .check-circle {
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    border: 2px solid #CBD5E1;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.15s;
+  }
+
+  .menu-item.selected .check-circle {
+    background: var(--green);
+    border-color: var(--green);
+    color: #fff;
+    font-size: 12px;
+  }
+
+  .delivery-badge {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #F0FDF4;
+    border: 1px solid #BBF7D0;
+    border-radius: 10px;
+    padding: 10px 14px;
+  }
+
+  .delivery-badge .bike-icon {
+    width: 32px; height: 32px;
+    background: var(--green);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+
+  .delivery-badge p {
+    font-size: 13px;
+    font-weight: 500;
+    color: #15803D;
+  }
+
+  .delivery-badge span {
+    font-size: 11px;
+    color: #4ADE80;
+    display: block;
+    margin-top: 2px;
+  }
+
+  .progress-bar {
+    height: 3px;
+    background: #DCFCE7;
+    border-radius: 2px;
+    margin-top: 6px;
+  }
+
+  .progress-fill {
+    height: 100%;
+    width: 70%;
+    background: var(--green);
+    border-radius: 2px;
+  }
+
+  .btn-submit {
+    width: 100%;
+    background: var(--green);
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    padding: 14px;
+    font-size: 15px;
+    font-weight: 600;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: background 0.15s, transform 0.1s;
+  }
+
+  .btn-submit:hover { background: var(--green-dark); }
+  .btn-submit:active { transform: scale(0.98); }
+
+  .nav-links {
+    text-align: center;
+    padding: 14px 20px 20px;
+    background: #fff;
+    border-top: 1px solid #F1F5F9;
+  }
+
+  .nav-links a {
+    font-size: 13px;
+    color: var(--green-dark);
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  .success-toast {
+    display: none;
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #0F172A;
+    color: #fff;
+    padding: 12px 20px;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 500;
+    gap: 8px;
+    align-items: center;
+    z-index: 999;
+    border: 1px solid #22C55E;
+  }
+
+  .success-toast.show { display: flex; }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <div class="card-header">
+    <div class="logo">
+      <div class="logo-icon">🚲</div>
+      Ruta del Almuerzo
+    </div>
+    <div class="avatar">👤</div>
+  </div>
+
+  <div class="hero">
+    <h1>Tu almuerzo,<br>a pedal.</h1>
+    <p>Completa tu pedido en segundos y recíbelo de forma sostenible.</p>
+  </div>
+
+  <div class="form-body">
+    <div class="field">
+      <label>Nombre completo</label>
+      <div class="input-wrap">
+        <span class="icon">👤</span>
+        <input type="text" id="nombre" placeholder="Ej. Juan Pérez">
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Dirección de entrega</label>
+      <div class="input-wrap">
+        <span class="icon">📍</span>
+        <input type="text" id="direccion" placeholder="Calle, Número, Depto">
+      </div>
+    </div>
+
+    <div>
+      <p class="menu-label">Selecciona tu menú</p>
+      <div class="menu-grid" id="menuGrid">
+        <div class="menu-item selected" data-id="1" onclick="selectMenu(this)">
+          <div class="menu-icon">🍽️</div>
+          <div class="menu-info">
+            <p>Menú del día</p>
+            <span>$3.500</span>
+          </div>
+          <div class="check-circle">✓</div>
+        </div>
+        <div class="menu-item" data-id="2" onclick="selectMenu(this)">
+          <div class="menu-icon">🥗</div>
+          <div class="menu-info">
+            <p>Vegetariano</p>
+            <span>$3.500</span>
+          </div>
+          <div class="check-circle"></div>
+        </div>
+        <div class="menu-item" data-id="3" onclick="selectMenu(this)">
+          <div class="menu-icon">🌾</div>
+          <div class="menu-info">
+            <p>Sin gluten</p>
+            <span>$4.000</span>
+          </div>
+          <div class="check-circle"></div>
+        </div>
+        <div class="menu-item" data-id="4" onclick="selectMenu(this)">
+          <div class="menu-icon">⭐</div>
+          <div class="menu-info">
+            <p>Especial</p>
+            <span>$4.500</span>
+          </div>
+          <div class="check-circle"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Notas opcionales</label>
+      <div class="input-wrap">
+        <textarea id="notas" placeholder="Ej. Sin cebolla, dejar en recepción..."></textarea>
+      </div>
+    </div>
+
+    <div class="delivery-badge">
+      <div class="bike-icon">🚲</div>
+      <div>
+        <p>Entrega rápida</p>
+        <span>Hoy entre 12:00 – 13:30 hrs</span>
+        <div class="progress-bar"><div class="progress-fill"></div></div>
+      </div>
+    </div>
+
+    <button class="btn-submit" onclick="confirmarPedido()">
+      Confirmar Pedido →
+    </button>
+  </div>
+
+  <div class="nav-links">
+    <a href="matias.html">¿Eres Matías? → Ver tu ruta</a>
+  </div>
+</div>
+
+<div class="success-toast" id="toast">
+  ✅ &nbsp;¡Pedido confirmado! Matías viene en camino.
+</div>
+
+<script>
+  let menuSeleccionado = 1;
+
+  function selectMenu(el) {
+    document.querySelectorAll('.menu-item').forEach(item => {
+      item.classList.remove('selected');
+      item.querySelector('.check-circle').textContent = '';
+    });
+    el.classList.add('selected');
+    el.querySelector('.check-circle').textContent = '✓';
+    menuSeleccionado = parseInt(el.dataset.id);
+  }
+
+  async function confirmarPedido() {
+    const nombre    = document.getElementById('nombre').value.trim();
+    const direccion = document.getElementById('direccion').value.trim();
+    const notas     = document.getElementById('notas').value.trim();
+
+    if (!nombre || !direccion) {
+      alert('Por favor completa tu nombre y dirección de entrega.');
+      return;
+    }
+
+    const pedido = {
+      nombre_completo:   nombre,
+      direccion_entrega: direccion,
+      menu_id:           menuSeleccionado,
+      notas:             notas
+    };
+
+    try {
+      const res = await fetch('/pedidos', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify(pedido)
+      });
+
+      if (res.ok) {
+        mostrarToast();
+        document.getElementById('nombre').value    = '';
+        document.getElementById('direccion').value = '';
+        document.getElementById('notas').value     = '';
+      } else {
+        mostrarToast();
+      }
+    } catch {
+      mostrarToast();
+    }
+  }
+
+  function mostrarToast() {
+    const toast = document.getElementById('toast');
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 3500);
+  }
+</script>
+</body>
+</html>

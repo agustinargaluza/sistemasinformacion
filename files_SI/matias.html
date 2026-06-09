@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mis Entregas – Matías</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --green:      #22C55E;
+    --green-dark: #16A34A;
+    --green-bg:   #F0FDF4;
+    --bg:         #0F172A;
+    --surface:    #1E293B;
+    --text:       #F8FAFC;
+    --muted:      #94A3B8;
+    --border:     #E2E8F0;
+    --radius:     12px;
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    padding: 24px 16px 40px;
+  }
+
+  .card {
+    background: #fff;
+    color: #0F172A;
+    border-radius: 20px;
+    width: 100%;
+    max-width: 420px;
+    overflow: hidden;
+  }
+
+  .card-header {
+    background: var(--bg);
+    padding: 18px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .logo {
+    display: flex; align-items: center; gap: 8px;
+    font-weight: 600; font-size: 14px; color: var(--text);
+  }
+
+  .logo-icon {
+    width: 28px; height: 28px; background: var(--green);
+    border-radius: 50%; display: flex; align-items: center;
+    justify-content: center; font-size: 14px;
+  }
+
+  .avatar {
+    width: 34px; height: 34px; border-radius: 50%;
+    background: var(--surface); display: flex;
+    align-items: center; justify-content: center; font-size: 16px;
+  }
+
+  .stats-bar {
+    background: var(--bg);
+    padding: 0 20px 16px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
+  }
+
+  .stat {
+    background: var(--surface);
+    border-radius: 10px;
+    padding: 10px 12px;
+    text-align: center;
+  }
+
+  .stat .num {
+    font-size: 20px; font-weight: 700; color: var(--text);
+  }
+
+  .stat .num.green { color: var(--green); }
+  .stat .num.amber { color: #FBBF24; }
+
+  .stat .lbl {
+    font-size: 10px; color: var(--muted); margin-top: 2px;
+  }
+
+  .zone-section { background: #fff; }
+
+  .zone-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 20px 8px;
+    border-top: 1px solid #F1F5F9;
+  }
+
+  .zone-name {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 13px; font-weight: 600; color: #0F172A;
+  }
+
+  .zone-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+  }
+
+  .zone-badge {
+    font-size: 11px; font-weight: 500;
+    padding: 3px 8px; border-radius: 20px;
+  }
+
+  .badge-pending {
+    background: #FEF3C7; color: #92400E;
+  }
+
+  .badge-done {
+    background: #DCFCE7; color: #166534;
+  }
+
+  .order-card {
+    margin: 0 12px 8px;
+    border: 1px solid #E2E8F0;
+    border-radius: 12px;
+    padding: 12px 14px;
+    transition: all 0.2s;
+  }
+
+  .order-card.delivered {
+    background: #F8FAFC;
+    border-color: #E2E8F0;
+    opacity: 0.7;
+  }
+
+  .order-card.active {
+    border-color: var(--green);
+    background: #F0FDF4;
+  }
+
+  .order-top {
+    display: flex; align-items: flex-start;
+    justify-content: space-between; gap: 8px;
+    margin-bottom: 6px;
+  }
+
+  .order-id {
+    font-size: 10px; font-weight: 600;
+    color: #94A3B8; margin-bottom: 2px;
+  }
+
+  .order-name {
+    font-size: 14px; font-weight: 600; color: #0F172A;
+  }
+
+  .order-card.delivered .order-name {
+    color: #94A3B8;
+    text-decoration: line-through;
+  }
+
+  .zone-pill {
+    font-size: 10px; font-weight: 600;
+    padding: 3px 8px; border-radius: 20px;
+    white-space: nowrap; flex-shrink: 0;
+  }
+
+  .zona-a { background: #DCFCE7; color: #166534; }
+  .zona-b { background: #DBEAFE; color: #1E40AF; }
+  .zona-c { background: #EDE9FE; color: #5B21B6; }
+
+  .order-address {
+    font-size: 12px; color: #64748B;
+    display: flex; align-items: center; gap: 6px;
+    margin-bottom: 10px;
+  }
+
+  .order-actions {
+    display: flex; align-items: center; gap: 8px;
+  }
+
+  .action-btn {
+    width: 32px; height: 32px; border-radius: 50%;
+    border: 1px solid #E2E8F0; background: #fff;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; font-size: 15px;
+    transition: all 0.15s;
+  }
+
+  .action-btn:hover { border-color: var(--green); background: var(--green-bg); }
+
+  .btn-entregar {
+    margin-left: auto;
+    background: var(--green); color: #fff;
+    border: none; border-radius: 20px;
+    padding: 7px 14px; font-size: 12px; font-weight: 600;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer; display: flex; align-items: center; gap: 5px;
+    transition: background 0.15s;
+  }
+
+  .btn-entregar:hover { background: var(--green-dark); }
+
+  .btn-entregado {
+    margin-left: auto;
+    background: #E2E8F0; color: #94A3B8;
+    border: none; border-radius: 20px;
+    padding: 7px 14px; font-size: 12px; font-weight: 600;
+    font-family: 'Inter', sans-serif;
+    cursor: default; display: flex; align-items: center; gap: 5px;
+  }
+
+  .map-preview {
+    margin: 0 12px 8px;
+    border: 1px solid #E2E8F0;
+    border-radius: 12px;
+    overflow: hidden;
+    height: 100px;
+    background: #E2E8F0;
+    display: flex; align-items: center; justify-content: center;
+    position: relative;
+  }
+
+  .map-preview .map-label {
+    font-size: 12px; color: #64748B;
+    background: rgba(255,255,255,0.85);
+    padding: 4px 10px; border-radius: 20px;
+  }
+
+  .map-dots {
+    position: absolute; top: 0; left: 0;
+    width: 100%; height: 100%;
+    background:
+      radial-gradient(circle at 30% 40%, rgba(34,197,94,0.3) 2px, transparent 2px),
+      radial-gradient(circle at 55% 60%, rgba(34,197,94,0.3) 2px, transparent 2px),
+      radial-gradient(circle at 70% 35%, rgba(34,197,94,0.3) 2px, transparent 2px),
+      linear-gradient(135deg, #CBD5E1 0%, #E2E8F0 100%);
+  }
+
+  .bottom-nav {
+    background: #fff;
+    border-top: 1px solid #E2E8F0;
+    padding: 12px 20px;
+    display: grid; grid-template-columns: 1fr 1fr 1fr;
+    gap: 4px;
+  }
+
+  .nav-item {
+    display: flex; flex-direction: column;
+    align-items: center; gap: 4px;
+    padding: 6px; border-radius: 8px;
+    cursor: pointer; text-decoration: none;
+    transition: background 0.15s;
+  }
+
+  .nav-item:hover { background: #F1F5F9; }
+  .nav-item.active { color: var(--green); }
+
+  .nav-item .nav-icon { font-size: 20px; }
+  .nav-item .nav-lbl { font-size: 10px; font-weight: 500; color: #64748B; }
+  .nav-item.active .nav-lbl { color: var(--green); }
+
+  .refresh-btn {
+    display: flex; align-items: center; justify-content: center;
+    gap: 8px; margin: 12px 20px 4px;
+    background: #F8FAFC; border: 1px dashed #CBD5E1;
+    border-radius: 10px; padding: 10px;
+    font-size: 12px; color: #64748B; cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .refresh-btn:hover { border-color: var(--green); color: var(--green); }
+
+  .toast {
+    display: none; position: fixed;
+    bottom: 24px; left: 50%; transform: translateX(-50%);
+    background: #0F172A; color: #fff;
+    padding: 10px 18px; border-radius: 10px;
+    font-size: 13px; font-weight: 500;
+    align-items: center; gap: 8px;
+    z-index: 999; border: 1px solid var(--green);
+  }
+
+  .toast.show { display: flex; }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <div class="card-header">
+    <div class="logo">
+      <div class="logo-icon">🚲</div>
+      Mis Entregas – Matías
+    </div>
+    <div class="avatar">🧑</div>
+  </div>
+
+  <div class="stats-bar">
+    <div class="stat">
+      <div class="num" id="totalHoy">10</div>
+      <div class="lbl">Total hoy</div>
+    </div>
+    <div class="stat">
+      <div class="num green" id="entregados">3</div>
+      <div class="lbl">Entregados</div>
+    </div>
+    <div class="stat">
+      <div class="num amber" id="pendientes">7</div>
+      <div class="lbl">Pendientes</div>
+    </div>
+  </div>
+
+  <div id="lista-pedidos"></div>
+
+  <div class="refresh-btn" onclick="cargarPedidos()">
+    🔄 Actualizar pedidos
+  </div>
+
+  <div class="bottom-nav">
+    <a class="nav-item" href="index.html">
+      <span class="nav-icon">🛒</span>
+      <span class="nav-lbl">Pedidos</span>
+    </a>
+    <a class="nav-item active" href="matias.html">
+      <span class="nav-icon">🗺️</span>
+      <span class="nav-lbl">Mi ruta</span>
+    </a>
+    <a class="nav-item" href="dashboard.html">
+      <span class="nav-icon">📊</span>
+      <span class="nav-lbl">Dashboard</span>
+    </a>
+  </div>
+</div>
+
+<div class="toast" id="toast">✅ &nbsp;Entrega marcada</div>
+
+<script>
+  const zonaCfg = {
+    1: { nombre: 'Zona A – Centro',  cls: 'zona-a', dot: '#22C55E' },
+    2: { nombre: 'Zona B – Norte',   cls: 'zona-b', dot: '#3B82F6' },
+    3: { nombre: 'Zona C – Sur',     cls: 'zona-c', dot: '#8B5CF6' }
+  };
+
+  const pedidosMock = [
+    { id: 204, cliente: 'Alejandro Ramos',  direccion: 'Av. Libertador 1250, Piso 4B',   zona_id: 1, estado: 'entregado' },
+    { id: 205, cliente: 'Sofía Méndez',     direccion: 'Calle Florida 455, Local 12',    zona_id: 1, estado: 'entregado' },
+    { id: 206, cliente: 'Juan Torres',      direccion: 'Huérfanos 1150, Of. 301',        zona_id: 1, estado: 'en_ruta'  },
+    { id: 207, cliente: 'Ana Castillo',     direccion: 'Moneda 970, Piso 12',            zona_id: 1, estado: 'pendiente'},
+    { id: 208, cliente: 'Diego Morales',    direccion: 'Estado 359, Piso 8',             zona_id: 1, estado: 'pendiente'},
+    { id: 211, cliente: 'Carlos Martínez',  direccion: 'Belgrano 2100, Oficina 801',     zona_id: 2, estado: 'entregado'},
+    { id: 212, cliente: 'Pedro Soto',       direccion: 'Av. Italia 550, Of. 3',          zona_id: 2, estado: 'pendiente'},
+    { id: 213, cliente: 'Valentina Cruz',   direccion: 'Av. Providencia 1234, Of. 2',    zona_id: 2, estado: 'pendiente'},
+    { id: 215, cliente: 'Marina López',     direccion: 'Av. Corrientes 3455, PB',        zona_id: 3, estado: 'en_ruta' },
+    { id: 216, cliente: 'Lucía Vargas',     direccion: 'Irarrázaval 3240, Depto 5',      zona_id: 3, estado: 'pendiente'}
+  ];
+
+  let pedidos = [...pedidosMock];
+
+  async function cargarPedidos() {
+    try {
+      const res = await fetch('/pedidos/hoy');
+      if (res.ok) { pedidos = await res.json(); }
+    } catch { /* usa mock */ }
+    renderizar();
+  }
+
+  function renderizar() {
+    const entregados = pedidos.filter(p => p.estado === 'entregado').length;
+    const pendientes = pedidos.filter(p => p.estado !== 'entregado').length;
+    document.getElementById('totalHoy').textContent   = pedidos.length;
+    document.getElementById('entregados').textContent = entregados;
+    document.getElementById('pendientes').textContent = pendientes;
+
+    const grupos = {};
+    pedidos.forEach(p => {
+      if (!grupos[p.zona_id]) grupos[p.zona_id] = [];
+      grupos[p.zona_id].push(p);
+    });
+
+    let html = '';
+    Object.entries(grupos).forEach(([zonaId, lista]) => {
+      const z        = zonaCfg[zonaId];
+      const pending  = lista.filter(p => p.estado !== 'entregado').length;
+      const badgeCls = pending > 0 ? 'badge-pending' : 'badge-done';
+      const badgeTxt = pending > 0 ? `${pending} Pendiente${pending > 1 ? 's' : ''}` : 'Completa ✓';
+
+      html += `<div class="zone-section">
+        <div class="zone-header">
+          <div class="zone-name">
+            <div class="zone-dot" style="background:${z.dot}"></div>
+            ${z.nombre}
+          </div>
+          <span class="zone-badge ${badgeCls}">${badgeTxt}</span>
+        </div>`;
+
+      if (parseInt(zonaId) === 3) {
+        html += `<div class="map-preview">
+          <div class="map-dots"></div>
+          <span class="map-label">📍 Visualización de Zona C activa</span>
+        </div>`;
+      }
+
+      lista.forEach(p => {
+        const isEntregado = p.estado === 'entregado';
+        const isActivo    = p.estado === 'en_ruta';
+        html += `
+          <div class="order-card ${isEntregado ? 'delivered' : isActivo ? 'active' : ''}" id="order-${p.id}">
+            <div class="order-top">
+              <div>
+                <div class="order-id">#${p.id}</div>
+                <div class="order-name">${p.cliente}</div>
+              </div>
+              <span class="zone-pill ${z.cls}">${z.nombre.split(' ')[1]}</span>
+            </div>
+            <div class="order-address">📍 ${p.direccion}</div>
+            <div class="order-actions">
+              <button class="action-btn" title="Llamar">📞</button>
+              <button class="action-btn" title="Ver en mapa">🗺️</button>
+              ${isEntregado
+                ? `<button class="btn-entregado">✓ Entregado</button>`
+                : `<button class="btn-entregar" onclick="marcarEntregado(${p.id})">✓ Entregado</button>`
+              }
+            </div>
+          </div>`;
+      });
+
+      html += `</div>`;
+    });
+
+    document.getElementById('lista-pedidos').innerHTML = html;
+  }
+
+  async function marcarEntregado(id) {
+    try {
+      await fetch(`/pedidos/${id}/entregar`, { method: 'PATCH' });
+    } catch {}
+    const p = pedidos.find(x => x.id === id);
+    if (p) p.estado = 'entregado';
+    renderizar();
+    const toast = document.getElementById('toast');
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 2500);
+  }
+
+  cargarPedidos();
+</script>
+</body>
+</html>
